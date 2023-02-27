@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 
 const articleSchema = mongoose.Schema({
-  total: Number,
-  shippingFees: Number,
-  purchaseDate: Date,
-  user: String,
-  isPaid: Boolean,
-  articles: [{type: mongoose.Schema.Types.ObjectId, ref: "articles"}],
+  name: String,
+  country: {type: mongoose.Schema.Types.ObjectId, ref: "country"},
+  price: Number,
+  category: {type: mongoose.Schema.Types.ObjectId, ref: "categories"},
+  note: Number,
+  description: String,
+  stock: Number,
+  image: Array,
 });
 
 const Article = mongoose.model('articles', articleSchema);
