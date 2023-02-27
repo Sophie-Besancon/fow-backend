@@ -17,7 +17,10 @@ const userSchema = mongoose.Schema({
   address: addressSchema,
   articlesinFavorite: [{type: mongoose.Schema.Types.ObjectId, ref: "articles"}],
   articlesinBasket: [{type: mongoose.Schema.Types.ObjectId, ref: "articles"}],
-  canBookmark:false
+  canBookmark: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const User = mongoose.model('users', userSchema);
