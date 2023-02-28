@@ -12,7 +12,7 @@ const articleSchema = mongoose.Schema({
   continentOfCountry:String,
   flagOfContinent:String,
   FlagOfCountry:String,
-});
+});//test
 
 const Article = mongoose.model('articles', articleSchema);
 
