@@ -2,13 +2,16 @@ const mongoose = require('mongoose');
 
 const articleSchema = mongoose.Schema({
   name: String,
-  country: {type: mongoose.Schema.Types.ObjectId, ref: "country"},
   price: Number,
-  category: {type: mongoose.Schema.Types.ObjectId, ref: "categories"},
   note: Number,
   description: String,
   stock: Number,
   image: Array,
+  categoryName:String,
+  countryName:String,
+  continentOfCountry:String,
+  flagOfContinent:String,
+  FlagOfCountry:String,
 });
 
 const Article = mongoose.model('articles', articleSchema);
