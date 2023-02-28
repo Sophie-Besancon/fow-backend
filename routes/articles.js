@@ -18,4 +18,10 @@ router.get('/:name', (req, res) => {
     });
   });
 
+  router.get('/', (req, res) => {
+  Article.find({}).then(data=>{
+    res.json({result: true, allArticles: data})
+  })
+  })
+
   module.exports = router;
