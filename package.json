@@ -15,12 +15,8 @@
     "express": "~4.16.1",
     "mongoose": "^6.10.0",
     "morgan": "~1.9.1",
-<<<<<<< HEAD
     "node-fetch": "2",
-    "react-redux": "^8.0.5"
-=======
     "react-redux": "^8.0.5",
     "uid2": "^1.0.0"
->>>>>>> cyril
   }
 }
