@@ -26,8 +26,8 @@ router.get('/', (req, res) => {
 })
 
 //route GET pour filtrer les produits par continent dans MarketScreen 
-router.get('/continentArticles/:continentOfCountry', (req, res) => {
-    Article.find({ continentOfCountry: req.params.continentOfCountry }).then(data => {
+router.get('/continent/:continent', (req, res) => {
+    Article.find({ continentOfCountry: req.params.continent }).then(data => {
         if (data && data.length > 0) {
             res.json({ result: true, continentArticles: data });
         } else {
