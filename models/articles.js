@@ -7,11 +7,11 @@ const articleSchema = mongoose.Schema({
   description: String,
   stock: Number,
   image: Array,
-  categoryName:String,
-  countryName:String,
-  continentOfCountry:String,
-  flagOfContinent:String,
-  FlagOfCountry:String,
+  categoryName: String,
+  countryName: String,
+  continentOfCountry: String,
+  flagOfContinent: String,
+  flagOfCountry: String,
 });//test
 
 const Article = mongoose.model('articles', articleSchema);
