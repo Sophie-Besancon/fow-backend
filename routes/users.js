@@ -8,19 +8,21 @@ const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
 
 router.post('/signup', (req, res) => {
-  if (!checkBody(req.body, ['username', 'password'])) {
+  if (!checkBody(req.body, ['lastname', 'password'])) {
     res.json({ result: false, error: 'Missing or empty fields' });
     return;
   }
 
   // Vérification si l'utilisateur est déjà existant
-  User.findOne({ username: req.body.username }).then(data => {
+  User.findOne({ lastname: req.body.lastname }).then(data => {
     if (data === null) {
       const hash = bcrypt.hashSync(req.body.password, 10);
 
       const newUser = new User({
-        username: req.body.username, //user
+        firstname:req.body.firstname,
+        lastname:req.body.lastname,
         password: hash,
+        mail:req.body.mail,
         token: uid2(32),
         canBookmark: true,
       });
@@ -36,12 +38,12 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/signin', (req, res) => {
-  if (!checkBody(req.body, ['username', 'password'])) {
+  if (!checkBody(req.body, ['lastname', 'password'])) {
     res.json({ result: false, error: 'Missing or empty fields' });
     return;
   }
 
-  User.findOne({ username: req.body.username }).then(data => {
+  User.findOne({ lastname: req.body.lastname }).then(data => {
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
       res.json({ result: true, token: data.token });
     } else {
