@@ -14,7 +14,7 @@ const userSchema = mongoose.Schema({
   lastname: String,
   mail: String,
   password: String,
-  address: addressSchema,
+  address: [addressSchema],
   articlesinFavorite: [{type: mongoose.Schema.Types.ObjectId, ref: "articles"}],
   articlesinBasket: [{type: mongoose.Schema.Types.ObjectId, ref: "articles"}],
   canBookmark: {

@@ -23,6 +23,7 @@ router.post('/signup', (req, res) => {
         lastname:req.body.lastname,
         password: hash,
         mail:req.body.mail,
+        address:null,
         token: uid2(32),
         canBookmark: true,
       });
