@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
 
 router.post('/signup', (req, res) => {
   if (!checkBody(req.body, ['lastname', 'password'])) {
-    res.json({ result: false, error: 'Missing or empty fields' });
+    res.json({ result: false, error: 'Champs vides ou manquants' });
     return;
   }
 
@@ -23,32 +23,31 @@ router.post('/signup', (req, res) => {
         lastname:req.body.lastname,
         password: hash,
         mail:req.body.mail,
-        address:[null],
         token: uid2(32),
         canBookmark: true,
       });
 
-      newUser.save().then(newDoc => {
-        res.json({ result: true, token: newDoc.token });
+      newUser.save().then(data => {
+        res.json({ result: true, data:data });
       });
     } else {
       // utilisateur déjà existant dans la bdd
-      res.json({ result: false, error: 'User already exists' });
+      res.json({ result: false, error: 'Cet utilisateur existe déjà' });
     }
   });
 });
 
 router.post('/signin', (req, res) => {
-  if (!checkBody(req.body, ['lastname', 'password'])) {
-    res.json({ result: false, error: 'Missing or empty fields' });
+  if (!checkBody(req.body, ['mail', 'password'])) {
+    res.json({ result: false, error: 'Champs vides ou manquants' });
     return;
   }
 
-  User.findOne({ lastname: req.body.lastname }).then(data => {
+  User.findOne({ mail: req.body.mail }).then(data => {
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
-      res.json({ result: true, token: data.token });
+      res.json({ result: true, data: data });
     } else {
-      res.json({ result: false, error: 'User not found or wrong password' });
+      res.json({ result: false, error: 'Utilisateur ou mot de passe incorrect' });
     }
   });
 });
@@ -56,9 +55,9 @@ router.post('/signin', (req, res) => {
 router.get('/canBookmark/:token', (req, res) => {
   User.findOne({ token: req.params.token }).then(data => {
     if (data) {
-      res.json({ result: true, canBookmark: data.canBookmark });
+      res.json({ result: true, data: data });
     } else {
-      res.json({ result: false, error: 'User not found' });
+      res.json({ result: false, error: 'Utilisateur non trouvé' });
     }
   });
 });
