@@ -69,6 +69,31 @@ router.get('/infos/:token', (req, res) => {
   });
 });
 
+//route PUT pour enregistrer l'état isLiked de chaque article dans la BDD 
+ router.put('/token', (req, res) => {
+  User.findOne({token: req.body.token}).then(data=>{
+      if(!data){
+      res.json({result: false, error: 'Utilisateur non trouvé'})
+      } else {
+        let articleArray = data.articlesinFavorite;
+        if (articleArray.includes(req.body.articleId)){
+         articleArray = articleArray.filter(article => article.toString() !== req.body.articleId)
+        } else {
+          articleArray.push(req.body.articleId)
+        }
+        User.findOneAndUpdate({token: req.body.token}, {articlesinFavorite: articleArray})
+         .then(() => {
+          User.findOne({token: req.body.token}) 
+          .populate('articlesinFavorite')
+          .then(data=>{
+            res.json({result: true, data})
+          })
+         })   
+      }
+  })
+}) 
+
+
 
 
 
