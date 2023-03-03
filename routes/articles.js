@@ -18,17 +18,6 @@ router.get('/:name', (req, res) => {
     });
 });
 
-// route POST pour filtrer les articles par Continent et/ou Catégorie
-router.post('/', (req, res) => {
-    const continent = req.body.continent ? req.body.continent : {$exists: true};
-    const category = req.body.category ? req.body.category : {$exists: true};
-
-    Article.find({continentOfCountry: continent, categoryName: category}).then(data => {
-        res.json({ result: true, filteredArticles: data })
-    })
-})
-
-
 //route GET pour afficher tous les produits disponibles en base de données dans MarketScreen 
 router.get('/', (req, res) => {
     Article.find({}).then(data => {
