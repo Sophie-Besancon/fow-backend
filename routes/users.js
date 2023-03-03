@@ -15,9 +15,12 @@ router.post('/signup', (req, res) => {
 
   // Vérification si l'utilisateur est déjà existant
   User.findOne({ lastname: req.body.lastname }).then(data => {
+    const regex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)
+    const mailTest = regex.test(req.body.mail)
+    
     if (data === null) {
-      const hash = bcrypt.hashSync(req.body.password, 10);
 
+      const hash = bcrypt.hashSync(req.body.password, 10);
       const newUser = new User({
         firstname:req.body.firstname,
         lastname:req.body.lastname,
@@ -30,7 +33,11 @@ router.post('/signup', (req, res) => {
       newUser.save().then(data => {
         res.json({ result: true, data:data });
       });
-    } else {
+    } else if (!mailTest){
+      res.json({ result: false, error: '❗️Votre adresse mail est incorrecte' });
+    } 
+
+    else {
       // utilisateur déjà existant dans la bdd
       res.json({ result: false, error: 'Cet utilisateur existe déjà' });
     }
@@ -52,7 +59,7 @@ router.post('/signin', (req, res) => {
   });
 });
 
-router.get('/canBookmark/:token', (req, res) => {
+router.get('/infos/:token', (req, res) => {
   User.findOne({ token: req.params.token }).then(data => {
     if (data) {
       res.json({ result: true, data: data });
@@ -61,5 +68,57 @@ router.get('/canBookmark/:token', (req, res) => {
     }
   });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+router.put('/update/:token', (req,res)=>{
+  const regex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)
+  const mailTest = regex.test(req.body.mail)
+
+  if (req.body.password !=null){
+     var hash = bcrypt.hashSync(req.body.password, 10);
+}
+  if (req.body.firstname!='' && req.body.lastname!='' && mailTest){
+    User.findOneAndUpdate({ token: req.params.token },{firstname:req.body.firstname, lastname:req.body.lastname, mail:req.body.mail, password:hash})
+    .then(data => {
+      if (data) {
+        res.json({ result: true, data:data, message:'✅ Toutes est bien enregistré !' });
+      } else {
+        res.json({ result: false, message: '❌ Utilisateur non trouvé' });
+      }
+    });
+  }
+  else{
+    res.json({ result: false, message: '❗️Adresse mail incorrecte ou champs manquants' });
+  }
+
+})
+
+
+
+
 
 module.exports = router;
