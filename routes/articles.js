@@ -18,12 +18,13 @@ router.get('/:name', (req, res) => {
     });
 });
 
-// route POST pour filtrer les articles par Continent et/ou Catégorie
+// route POST pour filtrer les articles par Continent et/ou Catégorie ou par nom pour la MarketScreen
 router.post('/', (req, res) => {
     const continent = req.body.continent ? req.body.continent : {$exists: true};
     const category = req.body.category ? req.body.category : {$exists: true};
+    const name = req.body.name ? { $regex: req.body.name, $options: 'i' } : {$exists: true};
 
-    Article.find({continentOfCountry: continent, categoryName: category}).then(data => {
+    Article.find({continentOfCountry: continent, categoryName: category, name: name}).then(data => {
         res.json({ result: true, filteredArticles: data })
     })
 })
