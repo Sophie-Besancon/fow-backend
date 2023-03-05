@@ -7,6 +7,8 @@ const { checkBody } = require("../modules/checkBody");
 const uid2 = require("uid2");
 const bcrypt = require("bcrypt");
 
+// Route permettant l'inscription de l'utilisateur
+// Cyril
 router.post("/signup", (req, res) => {
   if (!checkBody(req.body, ["lastname", "password"])) {
     res.json({ result: false, error: "Champs vides ou manquants" });
@@ -14,6 +16,7 @@ router.post("/signup", (req, res) => {
   }
 
   // Vérification si l'utilisateur est déjà existant
+
   User.findOne({ lastname: req.body.lastname }).then((data) => {
     const regex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
     const mailTest = regex.test(req.body.mail);
@@ -44,6 +47,8 @@ router.post("/signup", (req, res) => {
   });
 });
 
+// Route permettant la connexion de l'utilisateur
+//Cyril
 router.post("/signin", (req, res) => {
   if (!checkBody(req.body, ["mail", "password"])) {
     res.json({ result: false, error: "Champs vides ou manquants" });
@@ -73,7 +78,8 @@ router.get("/infos/:token", (req, res) => {
 });
 
 //route PUT pour enregistrer l'état isLiked de chaque article dans la BDD
-router.put("/token", (req, res) => {
+// thibault
+router.put("/updateFavoriteArticle", (req, res) => {
   User.findOne({ token: req.body.token }).then((data) => {
     if (!data) {
       res.json({ result: false, error: "Utilisateur non trouvé" });
@@ -84,6 +90,7 @@ router.put("/token", (req, res) => {
           (article) => article.toString() !== req.body.articleId
         );
       } else {
+        console.log("req body articleId", req.body.articleId);
         articleArray.push(req.body.articleId);
       }
       User.findOneAndUpdate(
@@ -93,7 +100,7 @@ router.put("/token", (req, res) => {
         User.findOne({ token: req.body.token })
           .populate("articlesinFavorite")
           .then((data) => {
-            res.json({ result: true, data });
+            res.json({ result: true, data:data });
           });
       });
     }
@@ -101,7 +108,8 @@ router.put("/token", (req, res) => {
 });
 
 // route PUT qui permet de mettre a jour les données utilisateur
-router.put("/update/:token", (req, res) => {
+// Cyril
+router.put("/updateUserInformations/:token", (req, res) => {
   const regex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
   const mailTest = regex.test(req.body.mail);
 
@@ -137,37 +145,51 @@ router.put("/update/:token", (req, res) => {
 });
 
 //route POST qui permet d'ajouter une nouvelle adresse à un utilisateur
+// Cyril
 router.post("/add_address/:token", (req, res) => {
-  const dataCity = {
-    street: req.body.street,
-    city: req.body.city,
-    zipCode: req.body.zipCode,
-    country: req.body.country,
-    isBillingAddress: req.body.isBillingAddress,
-    isDeliveryAddress: req.body.isDeliveryAddress,
-  };
+  if (
+    req.body.street != null &&
+    req.body.city != null &&
+    req.body.zipCode != null &&
+    req.body.country != null
+  ) {
+    var dataCity = {
+      street: req.body.street,
+      city: req.body.city,
+      zipCode: req.body.zipCode,
+      country: req.body.country,
+      isBillingAddress: req.body.isBillingAddress,
+      isDeliveryAddress: req.body.isDeliveryAddress,
+    };
+  } else {
+    res.json({ result: false, message: "❌ Des champs sont manquants" });
+    return;
+  }
 
   User.findOne({ token: req.params.token }).then((dataFind) => {
-   
-      if (req.body.isBillingAddress) {
-
-          for (const element of dataFind.address){
-
-            console.log(element);
-          }
-
-
+    let changeInformations = [...dataFind.address];
+    if (req.body.isBillingAddress) {
+      for (let element of changeInformations) {
+        element.isBillingAddress = false;
       }
-    
+    } else if (req.body.isDeliveryAddress) {
+      for (let element of changeInformations) {
+        element.isDeliveryAddress = false;
+      }
+    }
 
-    dataFind.address.push({ ...dataCity });
+    changeInformations.push({ ...dataCity });
     User.findOneAndUpdate(
       { token: req.params.token },
       {
-        address: dataFind.address,
+        address: changeInformations,
       }
     ).then((dataUpdate) => {
-      res.json({ result: true, message: "OK", data: dataUpdate });
+      res.json({
+        result: true,
+        message: "✅ Nouvelle adresse enregistrée",
+        data: dataUpdate,
+      });
     });
   });
 });
