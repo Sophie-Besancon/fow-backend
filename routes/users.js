@@ -90,7 +90,6 @@ router.put("/updateFavoriteArticle", (req, res) => {
           (article) => article.toString() !== req.body.articleId
         );
       } else {
-        console.log("req body articleId", req.body.articleId);
         articleArray.push(req.body.articleId);
       }
       User.findOneAndUpdate(
@@ -193,5 +192,17 @@ router.post("/add_address/:token", (req, res) => {
     });
   });
 });
+
+//route GET pour récupérer les articles favoris d'un utilisateur
+// thibault
+router.post("/favoriteArticle", (req, res) => {
+        User.findOne({ token: req.body.token })
+          .populate("articlesinFavorite")
+          .then((data) => {
+            res.json({ result: true, articlesinFavorite :data.articlesinFavorite });
+          });
+      });
+    
+
 
 module.exports = router;
