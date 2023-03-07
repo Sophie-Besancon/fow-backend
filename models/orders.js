@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const orderSchema = mongoose.Schema({
   total: Number,
-  shippingFees: Number,
   purchaseDate: Date,
   user: String,
   isPaid: Boolean,

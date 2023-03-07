@@ -203,18 +203,4 @@ router.post("/favoriteArticle", (req, res) => {
           });
       });
 
-
-//route GET pour regarder si l'utilisateur a rentré une adresse
-//Sophie
-router.get("/verifyAddress/:token", (req,res) => {
-  User.findOne({ token: req.params.token }).then((data) => {
-    if (data.address.length > 0) {
-      console.log(data.address.length)
-      res.json({ result: true});
-    } else {
-      res.json({ result: false, error: "Pas d'adresse enregistrée" });
-    }
-  });
-});
-
 module.exports = router;
