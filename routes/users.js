@@ -55,7 +55,9 @@ router.post("/signin", (req, res) => {
     return;
   }
 
-  User.findOne({ mail: req.body.mail }).then((data) => {
+  User.findOne({ mail: req.body.mail })
+  .populate('articlesinFavorite')
+  .then((data) => {
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
       res.json({ result: true, data: data });
     } else {
