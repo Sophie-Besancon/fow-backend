@@ -53,18 +53,36 @@ router.post("/signin", (req, res) => {
   }
 
   User.findOne({ mail: req.body.mail })
-  .populate('articlesinFavorite')
-  .then((data) => {
-    let databis = {...data}
-    if (data && bcrypt.compareSync(req.body.password, data.password)) {
-      res.json({ result: true, data: data });
-    } else {
-      res.json({
-        result: false,
-        error: "Utilisateur ou mot de passe incorrect",
-      });
-    }
-  });
+    .populate("articlesinFavorite")
+    .then((data) => {
+      if (data && bcrypt.compareSync(req.body.password, data.password)) {
+        const user = { ...data };
+        const favorite = user._doc.articlesinFavorite.map((element) => ({
+          name: element.name,
+          price: element.price,
+          note: element.price,
+          description: element.description,
+          stock: element.stock,
+          image: element.image,
+          categoryName: element.categoryName,
+          countryName: element.countryName,
+          continentOfCountry: element.continentOfCountry,
+          flagOfContinent: element.flagOfContinent,
+          flagOfCountry: element.flagOfCountry,
+          id: element._id, //fjfjf
+        }));
+        user._doc.articlesinFavorite = favorite;
+// cslg
+        console.log("DATA 2 : ", user._doc.articlesinFavorite);
+
+        res.json({ result: true, data: user._doc });
+      } else {
+        res.json({
+          result: false,
+          error: "Utilisateur ou mot de passe incorrect",
+        });
+      }
+    });
 });
 
 router.get("/infos/:token", (req, res) => {
@@ -84,12 +102,11 @@ router.put("/updateFavoriteArticle", (req, res) => {
       res.json({ result: false, error: "Utilisateur non trouvé" });
     } else {
       let articleArray = data.articlesinFavorite;
-      console.log('articleID backend',req.body.articleId);
+      console.log("articleID backend", req.body.articleId);
       if (articleArray.includes(req.body.articleId)) {
-        articleArray = articleArray.filter(
-          
-          (article) => {article.toString() !== req.body.articleId}
-        );
+        articleArray = articleArray.filter((article) => {
+          article.toString() !== req.body.articleId;
+        });
       } else {
         articleArray.push(req.body.articleId);
       }
@@ -100,7 +117,7 @@ router.put("/updateFavoriteArticle", (req, res) => {
         User.findOne({ token: req.body.token })
           .populate("articlesinFavorite")
           .then((data) => {
-            res.json({ result: true, data:data });
+            res.json({ result: true, data: data });
           });
       });
     }
@@ -194,11 +211,11 @@ router.post("/add_address/:token", (req, res) => {
 
 //route GET pour récupérer les articles favoris d'un utilisateur
 router.post("/favoriteArticle", (req, res) => {
-        User.findOne({ token: req.body.token })
-          .populate("articlesinFavorite")
-          .then((data) => {
-            res.json({ result: true, articlesinFavorite :data.articlesinFavorite });
-          });
-      });
+  User.findOne({ token: req.body.token })
+    .populate("articlesinFavorite")
+    .then((data) => {
+      res.json({ result: true, articlesinFavorite: data.articlesinFavorite });
+    });
+});
 
 module.exports = router;
