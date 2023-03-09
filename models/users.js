@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
   articlesinBasket: [{type: mongoose.Schema.Types.ObjectId, ref: "articles"}],
   canBookmark: {
     type: Boolean,
-    default: false
+    default: false,
   }
 });
 

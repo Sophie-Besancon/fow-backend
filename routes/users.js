@@ -8,7 +8,6 @@ const uid2 = require("uid2");
 const bcrypt = require("bcrypt");
 
 // Route permettant l'inscription de l'utilisateur
-// Cyril
 router.post("/signup", (req, res) => {
   if (!checkBody(req.body, ["lastname", "password"])) {
     res.json({ result: false, error: "Champs vides ou manquants" });
@@ -16,7 +15,6 @@ router.post("/signup", (req, res) => {
   }
 
   // Vérification si l'utilisateur est déjà existant
-
   User.findOne({ lastname: req.body.lastname }).then((data) => {
     const regex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
     const mailTest = regex.test(req.body.mail);
@@ -48,7 +46,6 @@ router.post("/signup", (req, res) => {
 });
 
 // Route permettant la connexion de l'utilisateur
-//Cyril
 router.post("/signin", (req, res) => {
   if (!checkBody(req.body, ["mail", "password"])) {
     res.json({ result: false, error: "Champs vides ou manquants" });
@@ -81,7 +78,6 @@ router.get("/infos/:token", (req, res) => {
 });
 
 //route PUT pour enregistrer l'état isLiked de chaque article dans la BDD
-// thibault
 router.put("/updateFavoriteArticle", (req, res) => {
   User.findOne({ token: req.body.token }).then((data) => {
     if (!data) {
@@ -112,7 +108,6 @@ router.put("/updateFavoriteArticle", (req, res) => {
 });
 
 // route PUT qui permet de mettre a jour les données utilisateur
-// Cyril
 router.put("/updateUserInformations/:token", (req, res) => {
   const regex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
   const mailTest = regex.test(req.body.mail);
@@ -149,7 +144,6 @@ router.put("/updateUserInformations/:token", (req, res) => {
 });
 
 //route POST qui permet d'ajouter une nouvelle adresse à un utilisateur
-// Cyril
 router.post("/add_address/:token", (req, res) => {
   if (
     req.body.street != null &&
@@ -199,7 +193,6 @@ router.post("/add_address/:token", (req, res) => {
 });
 
 //route GET pour récupérer les articles favoris d'un utilisateur
-// thibault
 router.post("/favoriteArticle", (req, res) => {
         User.findOne({ token: req.body.token })
           .populate("articlesinFavorite")
