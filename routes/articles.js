@@ -37,26 +37,4 @@ router.get('/', (req, res) => {
     })
 })
 
-//route GET pour filtrer les produits par continent dans MarketScreen 
-router.get('/continent/:continent', (req, res) => {
-    Article.find({ continentOfCountry: req.params.continent }).then(data => {
-        if (data && data.length > 0) {
-            res.json({ result: true, continentArticles: data });
-        } else {
-            res.json({ result: false });
-        }
-    })
-})
-
-//route GET pour filtrer les produits par catégorie dans MarketScreen 
-router.get('/categoryArticles/:categoryName', (req, res) => {
-    Article.find({ categoryName: req.params.categoryName }).then(data => {
-        if (data && data.length > 0) {
-            res.json({ result: true, categoryArticles: data });
-        } else {
-            res.json({ result: false });
-        }
-    })
-})
-
 module.exports = router;
