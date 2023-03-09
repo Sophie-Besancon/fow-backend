@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 
 require('../models/connection');
-const fetch = require('node-fetch');
 const Article = require("../models/articles")
 
 //route GET pour rechercher un produit sur la HomeScreen 

@@ -58,6 +58,9 @@ router.post("/signin", (req, res) => {
   User.findOne({ mail: req.body.mail })
   .populate('articlesinFavorite')
   .then((data) => {
+    console.log('dataaa',data);
+    let databis = {...data}
+    console.log('databis',databis);
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
       res.json({ result: true, data: data });
     } else {
@@ -87,9 +90,11 @@ router.put("/updateFavoriteArticle", (req, res) => {
       res.json({ result: false, error: "Utilisateur non trouvé" });
     } else {
       let articleArray = data.articlesinFavorite;
+      console.log('articleID backend',req.body.articleId);
       if (articleArray.includes(req.body.articleId)) {
         articleArray = articleArray.filter(
-          (article) => article.toString() !== req.body.articleId
+          
+          (article) => {article.toString() !== req.body.articleId}
         );
       } else {
         articleArray.push(req.body.articleId);
