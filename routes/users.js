@@ -48,34 +48,14 @@ router.post("/signup", (req, res) => {
 // Route permettant la connexion de l'utilisateur
 router.post("/signin", (req, res) => {
   if (!checkBody(req.body, ["mail", "password"])) {
-    res.json({ result: false, error: "Champs vides ou manquants" });
-    return;
+    res.json({ result: false, error: "Champs vides ou incorrects" });
   }
 
   User.findOne({ mail: req.body.mail })
     .populate("articlesinFavorite")
     .then((data) => {
       if (data && bcrypt.compareSync(req.body.password, data.password)) {
-        const user = { ...data };
-        const favorite = user._doc.articlesinFavorite.map((element) => ({
-          name: element.name,
-          price: element.price,
-          note: element.price,
-          description: element.description,
-          stock: element.stock,
-          image: element.image,
-          categoryName: element.categoryName,
-          countryName: element.countryName,
-          continentOfCountry: element.continentOfCountry,
-          flagOfContinent: element.flagOfContinent,
-          flagOfCountry: element.flagOfCountry,
-          id: element._id, //fjfjf
-        }));
-        user._doc.articlesinFavorite = favorite;
-// cslg
-        console.log("DATA 2 : ", user._doc.articlesinFavorite);
-
-        res.json({ result: true, data: user._doc });
+        res.json({ result: true, data: data });
       } else {
         res.json({
           result: false,
@@ -102,7 +82,6 @@ router.put("/updateFavoriteArticle", (req, res) => {
       res.json({ result: false, error: "Utilisateur non trouvé" });
     } else {
       let articleArray = data.articlesinFavorite;
-      console.log("articleID backend", req.body.articleId);
       if (articleArray.includes(req.body.articleId)) {
         articleArray = articleArray.filter((article) => {
           article.toString() !== req.body.articleId;
@@ -146,7 +125,7 @@ router.put("/updateUserInformations/:token", (req, res) => {
         res.json({
           result: true,
           data: data,
-          message: "✅ Toutes est bien enregistré !",
+          message: "✅ Tout est bien enregistré !",
         });
       } else {
         res.json({ result: false, message: "❌ Utilisateur non trouvé" });
@@ -209,13 +188,6 @@ router.post("/add_address/:token", (req, res) => {
   });
 });
 
-//route GET pour récupérer les articles favoris d'un utilisateur
-router.post("/favoriteArticle", (req, res) => {
-  User.findOne({ token: req.body.token })
-    .populate("articlesinFavorite")
-    .then((data) => {
-      res.json({ result: true, articlesinFavorite: data.articlesinFavorite });
-    });
-});
+
 
 module.exports = router;
