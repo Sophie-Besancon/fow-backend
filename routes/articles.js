@@ -4,6 +4,7 @@ var router = express.Router();
 require("../models/connection");
 const Article = require("../models/articles");
 
+// Route inutilisée
 //route GET pour rechercher un produit sur la HomeScreen
 // router.get("/:name", (req, res) => {
 //   console.log(req.params.name);
