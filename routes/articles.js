@@ -40,7 +40,7 @@ router.post("/", (req, res) => {
 //route GET pour afficher tous les produits disponibles en base de données dans MarketScreen
 router.get("/", (req, res) => {
   Article.find({}).then((data) => {
-    console.log("DATA ARTICLES : ", data);
+    // console.log("DATA ARTICLES : ", data);
     res.json({ result: true, allArticles: data });
   });
 });
